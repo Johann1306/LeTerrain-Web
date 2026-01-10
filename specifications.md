@@ -1,0 +1,1135 @@
+---
+
+# DOCUMENT DE SPÉCIFICATIONS : "LE TERRAIN - ULTIMATE TRAINING"
+
+## 1. VISION DU PROJET
+
+Créer une "Gaming Suite" en HTML5/JS (Canvas) contenant 8 mini-jeux d'entraînement et 1 jeu final RPG.
+
+* **Source de vérité :** Le fichier `leTerrain.properties` (fourni ci-après) est la bible. Tout (noms, items, ennemis, blagues) doit en être tiré.
+* **Le Twist :** Le joueur ne joue pas pour des points, mais pour **gagner des STATS**.
+* **La Boucle de Gameplay :**
+1. Le joueur choisit un ami (Mini-jeu).
+2. Il performe (Score = XP).
+3. Il monte le niveau de la stat associée (ex: Force Nvl 1 -> Nvl 3).
+4. **JEU FINAL :** Un combat RPG automatique où l'avatar du joueur utilise les 8 stats accumulées pour vaincre les Boss du fichier properties. Si les stats sont trop basses, le joueur meurt et doit retourner s'entraîner.
+
+
+
+## 2. INTERFACE "LE HUB"
+
+* **Style :** Interface de sélection de personnage type "Street Fighter" mais version "Terrain/Banlieue". police : "Press Start 2P". ambiance et design retrogaming mais avec des effets modernes, tape aà l'oeil et spectaculaires
+* **Data :** Affiche les 8 têtes des potes. Sous chaque tête, une barre de progression de la Statistique associée (ex: "Rapidité : Niveau 2/3").
+* **Le Verrou :** Le bouton "MISSION FINALE" au centre est bloqué tant que toutes les stats ne sont pas au niveau 1 minimum.
+
+## 3. DÉTAILS DES 8 MINI-JEUX (SYNTHÈSE DU FICHIER PROPERTIES)
+
+*L'IA doit implémenter ces mécaniques en mélangeant les références indiquées.*
+
+---
+
+### JEU 1 : JOHANN (Yo) -> Stat : CHANCE (Critique)
+
+**Synthèse du Lore :** Le "Vautour" (Charognard), la "Golden Gun Shower" (Pipi), "Chatroulette" et "Rocky Balboula".
+**Le Jeu : "La Roulette du Vautour"**
+
+* **Concept :** Un jeu de prise de risque (Push your luck).
+* **Gameplay :** Johann est au centre. Des objets tombent du ciel : des "Trèfles" (Bonus), des "Boosters volés" (Points) et des gouttes de "Golden Shower" (Danger).
+* **Mécanique :** Le joueur doit ramasser le plus d'objets possible. De temps en temps, une fenêtre "Chatroulette" apparaît et bloque la vue.
+* **Spécial :** Si la jauge de "Malchance" est pleine, Johann glisse sur une "Boulette vestimentaire" et perd tout.
+* **Stat gagnée :** Augmente le % de Coup Critique (Chance) pour le jeu final.
+
+### JEU 2 : NICOLAS (Nico) -> Stat : EXPLOIT (Dégâts / Force)
+
+**Synthèse du Lore :** "Tigre et Dragon", "Rage/Nervosité", "Insectes", "Grapina".
+**Le Jeu : "Grapina Rampage"**
+
+* **Concept :** Beat'em up à 1 bouton (Whack-a-mole violent).
+* **Gameplay :** Des ennemis (décrit dans `ennemi.noms.gitan` ou des Araignées) sortent de trous ou arrivent sur les côtés.
+* **Mécanique :** Nico doit taper VITE. Plus il tape, plus il devient rouge (Rage).
+* **Spécial :** Une fois la rage au max, il déclenche "L'attaque du Tigre et Dragon" (nettoie l'écran). Attention aux fausses cibles (ex: "Danielo la ponceuse" qu'il ne faut pas frapper).
+* **Stat gagnée :** Augmente les Dégâts Bruts (Exploit) pour le jeu final.
+
+### JEU 3 : PIERRE (Pip) -> Stat : AGILITÉ (Esquive)
+
+**Synthèse du Lore :** "DJ Piero", "Magic L'assemblée", "Ventoline", "Nez de Troll".
+**Le Jeu : "Magic Mix & Asthma"**
+
+* **Concept :** Jeu de Rythme hybride.
+* **Gameplay :** Pierre est aux platines. Les "notes" qui tombent sont des cartes Magic (Vert, Bleu, Rouge). Il faut taper en rythme.
+* **Contrainte :** Une jauge de "Souffle" descend constamment (Asthme).
+* **Mécanique :** Le joueur doit réussir des combos parfaits pour charger la "Ventoline". Appuyer sur Espace pour utiliser la Ventoline (clear l'écran et remplit le souffle), sinon l'écran devient flou et Pierre étouffe.
+* **Stat gagnée :** Augmente le % d'Esquive (Agilité) pour le jeu final.
+
+### JEU 4 : THOMAS (Tom) -> Stat : INTELLIGENCE (Mana / Regen)
+
+**Synthèse du Lore :** "Scout", "Saignement de nez", "Tortue", "Règles en tête".
+**Le Jeu : "Le Labyrinthe du Saigneur"**
+
+* **Concept :** Memory / Pathfinding sous pression.
+* **Gameplay :** Une carte (forêt scout) s'affiche 3 secondes avec le chemin sûr (sans pièges/loups). Elle disparaît. Thomas doit avancer de case en case de mémoire.
+* **Contrainte :** Son nez coule. Du sang obscurcit l'écran progressivement.
+* **Mécanique :** Il faut s'arrêter pour faire "La Tortue" (se protéger des projectiles) ou se moucher (nettoyer l'écran), tout en se souvenant du chemin.
+* **Stat gagnée :** Augmente la Regen de Mana/Vie (Intelligence) pour le jeu final.
+
+### JEU 5 : YANNICK (Ya) -> Stat : RÉSISTANCE (Défense)
+
+**Synthèse du Lore :** "Fumette/Pavot", "Star Wars", "Poker Face", "Même pas mal".
+**Le Jeu : "Empire State of High"**
+
+* **Concept :** Jeu d'équilibre et de Tanking.
+* **Gameplay :** Yannick est assis en "Poker Face". Des vagues d'attaques de "L'Empire" (Lasers, Stormtroopers) lui arrivent dessus.
+* **Mécanique :** Le joueur doit maintenir un bouton pour créer un nuage de fumée (Bouclier "Même pas mal"). Mais attention, fumer trop longtemps fait tousser (perte de vie). Il faut gérer la jauge de "Poumons" vs la jauge de "Dégâts".
+* **Objectif :** Encaisser le plus de dégâts possible sans mourir.
+* **Stat gagnée :** Augmente la Défense Physique (Résistance) pour le jeu final.
+
+### JEU 6 : ALI (Ali) -> Stat : RAPIDITÉ (Vitesse d'attaque)
+
+**Synthèse du Lore :** "Tapis Volant", "Voleur/Emprunteur", "Sucre Rouge", "Javelot".
+**Le Jeu : "Aladdin's Dash"**
+
+* **Concept :** Endless Runner vertical ou horizontal.
+* **Gameplay :** Ali est sur son tapis volant. Il fonce à toute allure.
+* **Mécanique :**
+1. Éviter les obstacles (Minarets, Pigeons).
+2. "Emprunter" des objets au vol (Portables, Sacs à main) pour le score.
+3. Attraper le "Sucre Rouge" pour un boost de vitesse temporaire (Invincible).
+
+
+* **Stat gagnée :** Augmente la Vitesse d'Action (Rapidité) pour le jeu final (taper avant l'ennemi).
+
+### JEU 7 : GUILLAUME (Guy) -> Stat : TECHNIQUE (Précision)
+
+**Synthèse du Lore :** "Alcool/Soirée", "Beer Pong", "50 nuances de grise", "Equilibre".
+**Le Jeu : "La Traversée de Bruges"**
+
+* **Concept :** Jeu de physique et d'adresse (type QWOP ou balancier).
+* **Gameplay :** Guillaume marche en titubant. Il tient un plateau avec 10 verres pleins ("Crache pas dans les verres").
+* **Mécanique :** Utiliser la souris/gyroscope pour compenser son tangage (gauche/droite).
+* **Challenge :** Des "flashs" de soirée (écran noir ou stroboscope) apparaissent pour désorienter. Il faut arriver au bout sans tout renverser.
+* **Stat gagnée :** Augmente la Précision des coups (Technique) pour le jeu final.
+
+### JEU 8 : JONATHAN (Russ) -> Stat : ENDURANCE (PV Max)
+
+**Synthèse du Lore :** "Punto Tuning", "Muscu", "Bronzage (Graisse à traire)", "Nervosité".
+**Le Jeu : "Punto Survival Tuning"**
+
+* **Concept :** Gestion de ressources multitâches.
+* **Gameplay :** Jonathan conduit sa Fiat Punto.
+* **Problèmes simultanés à gérer :**
+1. La voiture chauffe -> Mettre du liquide de refroidissement.
+2. Il pâlit -> Mettre de la "Graisse à traire" pour bronzer.
+3. La route tourne -> Tourner le volant.
+4. Quelqu'un klaxonne -> Appuyer sur "Insulte" (Nervosité) pour ne pas exploser.
+
+
+* **Stat gagnée :** Augmente les Points de Vie Max (Endurance) pour le jeu final.
+
+---
+
+## 4. LE JEU FINAL : "LE TERRAIN RPG"
+
+C'est ici que tout prend sens. Ce n'est pas un jeu d'arcade, c'est une simulation de combat basée sur les stats acquises.
+
+* **Structure :** Un "Dungeon Crawler" linéaire où le héros (Avatar du Joueur) avance sur une carte (Le Terrain).
+* **Les Ennemis :** Il rencontre des groupes d'ennemis tirés du fichier (`ennemi.noms.gitan`, `ennemi.noms.arabe`, etc.).
+* **Le Combat (Auto-Battler) :**
+* Le combat est automatique. Le joueur REGARDE son perso se battre.
+* Si le joueur a beaucoup de **Rapidité** (Jeu Ali), son perso tape 2x plus souvent.
+* Si le joueur a beaucoup d'**Intelligence** (Jeu Thomas), son perso se soigne tout seul quand il est blessé.
+* Si le joueur a beaucoup de **Chance** (Jeu Johann), il fait des Critiques (x2 dégâts).
+
+
+* **Le Boss Final :** Une succession des "Boss" du fichier properties (ex: "Boss Nico", "Boss Pip").
+* **Condition de Victoire :** Arriver au bout de la rue. Si on meurt -> Game Over -> Retour au HUB -> "Va t'entraîner sur les mini-jeux pour monter tes stats !".
+
+---
+
+## 5. INSTRUCTIONS DE DÉVELOPPEMENT (PHASE 1)
+
+Pour commencer, je veux que tu génères **l'architecture du projet**.
+
+1. **Parse le fichier `leTerrain.properties**` (ci-joint) et stocke les données (Personnages, Stats, Lore, Citations) dans un objet JSON global `GameData`.
+2. Crée le **HTML/CSS du HUB Principal** :
+* Une grille sombre, style néon/urbain.
+* 8 Cartes personnages (avec Nom + Stat + Barre de progression niveau 0 à 3).
+* Le bouton central "MISSION FINALE" (Grisé avec cadenas).
+* Au clic sur une carte, lance un placeholder "Lancement du jeu...".
+
+
+3. Prépare la logique de sauvegarde (`localStorage`) pour conserver les niveaux de stats.
+
+*[# FICHIER DE CONFIGURATION
+
+# Le caractere '#' en debut de ligne permet d'ecrire des commentaires dans ce fichier qui ne seront pas pris en compte par le programme
+
+#######################
+### LES PERSONNAGES ###
+#######################
+
+musique.repertoire.base=D:/Johann/Le Terrain/Projet - Le Terrain/Le Terrain - Le Jeu/classes
+
+# Les messages de dieu en debut de partie
+message.dieu.johann=Tu n'auras qu'une couille et un aiglon mais tu auras de la chatte! (Chance)
+message.dieu.nicolas=Tu seras petit et pas beau mais tu exploiteras tes faiblesses! (Exploit)
+message.dieu.pierre=Tu auras des oreilles d'Elfe mais tu auras un nez et une bite de Troll! (Agilite)
+message.dieu.thomas=Tu auras les regles en tetes et un mono sourcil mais tu feras tampon a la betise humaine! (Intelligence)
+message.dieu.yannick=Tu auras des seins et un casque de cheveux mais tu resisteras au dessein de l'empire! (Resistance)
+message.dieu.ali=Tu seras faim comme un javelot et tu auras un nez croche mais tu pourras voler pour arriver a bon porc! (Rapidite)
+message.dieu.guillaume=C'est pas la taille du navire qui compte mais l'etat du capitaine! (Technique)
+message.dieu.jonathan=Tu seras regonfle a bloc mais tu mettras des coups de pressions! (Endurance/Nervosite)
+
+# Surnom
+surnom.principal.johann=Yo
+surnom.principal.nicolas=Nico
+surnom.principal.pierre=Pip
+surnom.principal.thomas=Tom
+surnom.principal.yannick=Ya
+surnom.principal.ali=Ali
+surnom.principal.guillaume=Guy
+surnom.principal.jonathan=Russ
+
+### ATTENTION : NE PAS METTRE DE VIRGULE EN FIN DE LIGNE ###
+#Surnoms secondaires
+surnom.secondaires.johann=Yoko,Roran,Yonan,Yo la Chatte,Le Blanc Bec,Johann Debut de Merde
+surnom.secondaires.nicolas=Nicolasse,Niclette,Nicou,Nipop,Nicole,Le Ptit Nain,Le Ptit Pas Beau,Le Ptit Farfouilli au Rapport,Le Ptit Saoulant qui vient de Fumer,Le Ptit Grapineur,Nicolasse de la Vegas
+surnom.secondaires.pierre=Pipo,Pips,Pipas,Pipsou,Gripsou,Pipouze,Pieeeeerre,Pierrot,Pierrou,Pierron,Pierre Bellemare,DJ Pierro,Pierre les Doigts de Fer,Pierre la Grosse Bite,La pipasse
+surnom.secondaires.thomas=Darm,Darmounich,Darmch,Thomas De L'Armouni,Thomas De L'Harmonie,Tom pouce,Tomax,Darmounix,Darmoulinex,Thomas Delarboulasse
+surnom.secondaires.yannick=Yako,Yaco,Yannok,Yannox,Yannick ta mere,Yacou
+surnom.secondaires.ali=Alai,L'Arabe,L'Arabinou de Cafe,La Pedoula,Le Teteur Fou,Red Sugar,Le Diplomic
+surnom.secondaires.guillaume=Guigui,Guygou,Guygouze,Guimole,Guybrush,Guy de Bruges
+surnom.secondaires.jonathan=Jo,Roych,Russtipop,Roychtipop,Roychtimole,Djo
+
+# Origines
+origines.johann=Tchecoslovaques
+origines.nicolas=Espagnoles
+origines.pierre=Francaises alien
+origines.thomas=Judeo-Espagnoles
+origines.yannick=Francaises florales
+origines.ali=Pakistanaises
+origines.guillaume=Italiennes
+origines.jonathan=Italiennes
+
+###################
+### LES ENNEMIS ###
+###################
+
+### ATTENTION : NE PAS METTRE DE VIRGULE EN FIN DE LIGNE ###
+# Noms des enemis
+ennemi.noms.gitan=Jason,George,Brian,Tyson,Brandon,Steve,Tony,Eddy,Rudy,Francky,Andre,Alain,Jean-Michel,Roger,Jean,Giovanni,Rocky,Roxon,Miros,Peter,Jimmy,Franco,Angelo,Teddy,John,Jesse,Elvis,Davy
+ennemi.noms.arabe=Abel,Sofiane,Mustapha,Mohamed,Youssef,Jibril,Adel,Sabah,Yacine,Djamel,Samir,Rachid,Ahmed,Hocine,Abdel-Khader,Bilal,Sami,Yanis,Amal,Amine,Nabil,Hakim,Omar,Ibrahim,Malik,Mehdi,Karim,Jawaad,Said,Hassan,Atem,Aziz,Farid
+ennemi.noms.noir=Mamadou,Parfait,Didier,Matthieu,Djibril,Thierry,Malik,Corka,Aliou,Bamba,Samba,Issa,Koumba,Sekou,Seydou,Youssou,Abdoulaye,Jesaya,Demba,Amadou,Badou,Kofi,Ousmane,Ousmani,Coulibali
+ennemi.noms.handicape=Eric,Steve,Clement,Bernard,Olivier,Ludovic,Gregory,Leonard,Jean,Thibault,Yann,Jerome,Luc,Benjamin,Louis,Victor,Marc,Vincent,Tristan,Bastien,Sebastien,Adrien,Jeremy,Regis
+
+################
+### LES BOSS ###
+################
+
+# Phrases perso d'introduction de chaque Boss
+boss.citation.1=La routourne va vite tourner. (Franck Ribery)
+boss.citation.2=La folie est la source des exploits de tous les heros. (Erasme)
+boss.citation.3=La bohemienne dansait ... agile, legere, joyeuse, et ne sentant pas le poids du regard redoutable qui tombait a plomb sur sa tete. (Victor Hugo)
+boss.citation.4=L'intelligence defend la paix. L'intelligence a horreur de la guerre. (Paul Vaillant-Couturier)
+boss.citation.5=L'epee de la resistance passive n'a pas besoin de fourreau et nul ne peut en etre depossede par la force. (Gandhi)
+boss.citation.6=La beaute de la musique - comme celle de la lumiere - est celle de la rapidite, de la mobilite, de l'insaisissable. (Jean-Michel Jarre)
+boss.citation.7=Beaucoup de gens boivent, tres peu savent etre bourres. (Jacques Dutronc)
+boss.citation.8=Si les melancoliques ont besoin du tonique des coquetteries, peut-etre les gens nerveux ou sanguins decampent-ils si la resistance dure trop. (Honore de Balzac)
+
+# Phrases perso d'introduction de chaque Mini Boss ecole
+boss.citation.11=J'aime pas les rapporteurs! On va faire une dictee au tableau!
+boss.citation.12=Habillez vous en chantant et faites des sketchs!
+boss.citation.13=Un bouche de rat et une chatte en lain qui braquaient du bois facon Oudni durant l'age Ulferry!
+boss.citation.14=On va dessiner mais ne sucez pas vos stylos!
+boss.citation.15=Si il neige, on fera une bataille de boules! Sinon vous irez jouer au foot!
+
+###########################################
+### LES POUVOIRS DEBLOQUES DES LE DEBUT ###
+###########################################
+
+pouvoir.jonathan.801.nom=(Degats Mono) Abul de nerf a vif
+pouvoir.jonathan.801.inf=Met autant de claques a l'ennemi qu'il fera d'annees d'etude, qu'il aura de zero en dictee et qu'il s'enervera de manieres disproportionnees dans sa vie
+
+pouvoir.ali.701.nom=(Degats Mono) Taxeur Teteur fou
+pouvoir.ali.701.inf=Met autant de claques a l'ennemi qu'il taxera de cigarettes et qu'il mettra de coup de tete dans sa vie
+
+pouvoir.guillaume.601.nom=(Degats Mono) 50 nuances de grise
+pouvoir.guillaume.601.inf=Met autant de claques a l'ennemi qu'il fera de soirees completement dechire au whisky coca sans coca dans sa vie
+
+pouvoir.thomas.501.nom=(Degats Mono) Tu bluffes Martino
+pouvoir.thomas.501.inf=Met autant de claques a l'ennemi qu'il plagiera de repliques de films, de sketchs cultes et de chansons funky dans sa vie
+
+pouvoir.yannick.401.nom=(Degats Mono) Stark Wars Kid
+pouvoir.yannick.401.inf=Met autant de claques a l'ennemi qu'il revera de guerres de l'etoile, de se faire couper le moignon et de s'acoquiner avec sa soeur dans sa vie
+
+pouvoir.pierre.301.nom=(Degats Mono) Christ Crossroads
+pouvoir.pierre.301.inf=Met autant de claques a l'ennemi qu'il ira faire la queue a Carrefour le samedi et a l'Eglise le dimanche dans sa vie
+
+pouvoir.nicolas.201.nom=(Degats Mono) Petit et pas beau
+pouvoir.nicolas.201.inf=Met autant de claques a l'ennemi qu'on lui demandera sa carte d'identite pour verifier son age, sa taille et sa nationalite dans sa vie
+
+pouvoir.johann.101.nom=(Degats Mono) Rocky Balboula
+pouvoir.johann.101.inf=Met autant de claques a l'ennemi qu'il fera de conneries, de boulettes vestimentaires et qu'il bamboulera dans sa vie
+
+##############################################
+### LES MISSIONS ET LES POUVOIRS DEBLOQUES ###
+##############################################
+
+# Le truc qui m a pris des annees a faire !!!
+
+	################
+	### JONATHAN ###
+	################
+
+mission.jonathan.300.nom=Johnathan McCain
+mission.jonathan.300.inf=Regarder le film 'Die Hard 3' en evitant les pieges de cristal en moins de 58 minutes avant de retourner en enfer pour une belle journee
+pouvoir.jonathan.846.nom=(Taunt Multi) La mer noire
+pouvoir.jonathan.846.inf=Met son maillot de bain moule bambou, lit le code noir en ecoutant 'De La Soul' et affiche son tatouage mussolinien pour provoquer les ennemis
+
+mission.jonathan.301.nom=Pompes de racaille
+mission.jonathan.301.inf=Acheter les premieres d'une longue lignee de requins, une veste flashy, un banc de muscu et un Karcher
+pouvoir.jonathan.848.nom=(Stun Multi) Requins Arlequin et Haribo
+pouvoir.jonathan.848.inf=Met son accoutrement fluorescent quadricolor de la Commedia dell'Arte ou fait le baffie bouffi bouffon pour eblouir les ennemis et les bloquer
+
+mission.jonathan.302.nom=Un poing c'est tout
+mission.jonathan.302.inf=Acheter la premiere d'une longue lignee de Fiat Punto et s'enerver en realisant qu'on a du sang africain et asiatique... sur le pare-brise
+pouvoir.jonathan.847.nom=(Stun Mono) Rush Hour
+pouvoir.jonathan.847.inf=Stoppe brusquement sa conduite nerveuse de Jacky en faisant crisser ses pneus et gueule dans son retro ou sort de sa Punto pour impressioner un ennemi et le bloquer
+
+# Mission Repetable
+mission.jonathan.303.nom=Comme un poisson dans l'eau
+mission.jonathan.303.inf=Aller a la piscine pour s'entrainer a traverser ce qui separe l'homme de l'animal
+
+#Pas de recompense !!!
+mission.jonathan.304.nom=Epilation desopilante
+mission.jonathan.304.inf=S'epiler integralement pour une meilleure penetration dans tous les milieux aqueux et un bronzage plus homogene
+
+# Item debloque
+mission.jonathan.305.nom=Prise en main des mamelles
+mission.jonathan.305.inf=Acheter de la graisse a traire afin de l'utiliser en tant que bronzant, lubrifiant et comme du Minhavez
+item.jonathan.401.nom=Graisse a traire
+item.jonathan.401.inf=Au bon lait de vache
+
+mission.jonathan.306.nom=Bronzage extreme
+mission.jonathan.306.inf=S'exposer au soleil de maniere prolongee tel un baleineau echoue sur la banquise jusqu'a devenir noir de peau
+pouvoir.jonathan.842.nom=(Brulure Mana Multi) Coups de soleil
+pouvoir.jonathan.842.inf=Se rase integralement sans couper ses pattes et plonge dans une piscine de graisse a traire pour refleter les rayons du soleil et bruler les ennemis
+
+mission.jonathan.307.nom=Peau de cameleon
+mission.jonathan.307.inf=S'entretenir l'epiderme a cause des agressions du quotidien comme les gercures, les peaux seches et autres plantage de crayon dans la main
+pouvoir.jonathan.836.nom=(Regen Mana Perso) Cure de jouvence
+pouvoir.jonathan.836.inf=Se regenere en s'eclaboussant de creme blanche rajeunissante, de gel visqueux bio et de liquide de refroidissement anti-vieillissement
+
+mission.jonathan.308.nom=Vibreur silencieux
+mission.jonathan.308.inf=Omettre de repondre a son GSM le temps de mater un match et une emission culturelle juste avant le mariage d'Ali et son frere a Molenbeek
+pouvoir.jonathan.818.nom=(Esquive) La technique de l'Autroych
+pouvoir.jonathan.818.inf=Ne sort plus du troux pour esquiver les attaques judiciaires en chantant la ligue des questions pour un champion allah capello en fa mineur avec l'accent belge
+
+mission.jonathan.309.nom=Premier samedi du mois
+mission.jonathan.309.inf=Regarder la trilogie du samedi en attendant que ses parents s'endorment pour enregistrer discretement sur VHS les 26 saisons de Turbo
+pouvoir.jonathan.817.nom=(Aura Multi - Endurance) Le Triathlon du dimanche
+pouvoir.jonathan.817.inf=Invoque une aura d'Endurance physique et auto-moto-masturbo-televisuelle pour ses allies
+
+mission.jonathan.310.nom=Un homme de fer dans une toison de velour
+mission.jonathan.310.inf=Se regarder dans un miroir et realiser que l'on est plus proche du singe que de l'homo-xeno-phobo-erectus
+pouvoir.jonathan.812.nom=(Bouclier Perso) Torse poil
+pouvoir.jonathan.812.inf=Se protege grace a sa pilosite abondante en laissant repousser instantanement son manteau en poil d'ours brun
+
+mission.jonathan.311.nom=La pizza de Gino
+mission.jonathan.311.inf=Maitriser la cuisson des pates aux croutes de parmesan sans mettre de maillot et se taper 5 fruits et legumes par jour
+pouvoir.jonathan.882.nom=(Degats All) Italien ou Russe mais pas Azteque
+pouvoir.jonathan.882.inf=Sacrifie une pasteque Inca en la fracassant sur l'autel dans un exces de rage pour infliger des degats a tout le monde
+
+	#################
+	### GUILLAUME ###
+	#################
+
+mission.guillaume.400.nom=Le calme apres la tempete
+mission.guillaume.400.inf=Survivre a une grosse soiree houleuse sans trepasser ni faiblir tel un moussaillon deguise en dancing Queen
+pouvoir.guillaume.612.nom=(Bouclier Perso) Waterloo
+pouvoir.guillaume.612.inf=Se protege grace a son experience au combat contre les pirates, les zombies et soi-meme et grace a son peignoir Napoleonien a bas prix
+
+mission.guillaume.401.nom=L'enfer de la mode
+mission.guillaume.401.inf=Acheter un accoutrement cher qui protegera son porteur des vols de portable et autre patates perdues de fin d'embrouille de soiree racaille
+pouvoir.guillaume.613.nom=(Bouclier Mono) A moitie vide
+pouvoir.guillaume.613.inf=Prete sa doudoune sans manche et sa banane Lacoste a un allie pour une semi protection contre le froid, les degats et le style
+
+mission.guillaume.402.nom=La ronde des jonglerettes
+mission.guillaume.402.inf=S'entrainer techniquement et physiquement pour essayer de finir un match debout dans sa vie en se mettant a la recherche du poumon perdu
+pouvoir.guillaume.617.nom=(Aura Multi - Technique) Tu m'as fait bander
+pouvoir.guillaume.617.inf=Glorifie ses allies pour augmenter leur Technique en melant sport, sexualite et grand banditisme
+
+mission.guillaume.403.nom=GuiHam Burger
+mission.guillaume.403.inf=Creer une recette saine et equilibree pour se nourrir quotidiennement de maniere etrange, efficace et breve de Bruges
+pouvoir.guillaume.631.nom=(Regen Vie Perso) Pizza mayo sandwich
+pouvoir.guillaume.631.inf=Se regenere en ingurgitant une composition personnelle pliable de mets savoureux qui poussent naturellement dans le frigo
+
+mission.guillaume.404.nom=Reseaux sociaux anonymes
+mission.guillaume.404.inf=Trouver un moyen d'avoir plein d'amies sur Fakebook pour la Saint-Barthelemy tout en conservant son corps de lache
+pouvoir.guillaume.634.nom=(Absorb Vie Mono) Guillaume Froissard
+pouvoir.guillaume.634.inf=Penetre analogiquement le corps de qu'en'qu'in d'autre sur le dark web pour lui sucer son identite et sa richesse et la redistribuer aux plus demunis
+
+mission.guillaume.405.nom=Repos chamanique
+mission.guillaume.405.inf=Faire une petite sieste en soiree, le temps de retrouver ses esprits, apres avoir entrainer Alice dans sa chute au fond du trou
+pouvoir.guillaume.636.nom=(Regen Mana Perso) Meditation ethylique
+pouvoir.guillaume.636.inf=Tombe dans un coma regenerateur au pays des merveilles des escargots dans le slip apres avoir pris un petit dejeuner aux ongles de chocapic dans ce dernier
+
+mission.guillaume.406.nom=Ingurgite mais ne vomit pas
+mission.guillaume.406.inf=Boire comme un trou pour etre immunise contre le vomissement, le bescherelle et les serpents
+pouvoir.guillaume.640.nom=(Absorb Mana Multi) Gorge profonde
+pouvoir.guillaume.640.inf=Absorbe une quantite astronomique de Mana sans en perdre une goutte et sans devoir regurgiter, mollarder ou recracher le surplus
+
+mission.guillaume.407.nom=Le dauphin, la baleine, et l'elephant
+mission.guillaume.407.inf=Trouver un moyen de focaliser l'attention des spectateurs, en preparant un ballet aquatique alcoolique trompeur
+pouvoir.guillaume.648.nom=(Stun Multi) Vous voulez voir mon cul?
+pouvoir.guillaume.648.inf=Emet une hypothese embarrassante pour attirer l'attention puis effectue une action encore plus salace pour surprendre et bloquer les ennemis
+
+mission.guillaume.408.nom=Brasserie Mollard
+mission.guillaume.408.inf=Rouler sa bosse pour devenir chamelier et etancher sa soif en buvant 5 verres sans cracher dans la soupe ni baver sur la serveuse
+pouvoir.guillaume.681.nom=(Degats Multi) Crache pas dans les verres
+pouvoir.guillaume.681.inf=Utilise une expression cocasse qui n'existe pas dans un contexte inaprorie pour infliger des degats pendant que les ennemis restent perplexe
+
+	###########
+	### ALI ###
+	###########
+
+mission.ali.500.nom=Depucelage mecanique
+mission.ali.500.inf=Se forger son experience sur des engins de seconde main, se planter, tirer des fusees de detresse puis piloter des avions de chasse, des missiles et des bombes atomiques
+pouvoir.ali.712.nom=(Bouclier Perso) Pilote de l'extreme
+pouvoir.ali.712.inf=Se protege grace a son experience en conduite terroriste multirecidiviste multisupport en sortant toujours couvert
+
+mission.ali.501.nom=Coup de genie
+mission.ali.501.inf=Emprunter des trucs chez Jafar sans se faire prendre la main dans le sac pour financer un traffic international de tapis volant
+pouvoir.ali.717.nom=(Aura Multi - Rapidite) Pas vu, paprika
+pouvoir.ali.717.inf=Invoque une aura qui augmente la Rapidite et la dexterite de ses allies pour voler d'immeuble en immeuble comme Superman, Batman ou Spiderman
+
+mission.ali.502.nom=Changement de bord
+mission.ali.502.inf=Modifier ses frequentations de maniere radical et apprendre a gerer ses emotions derriere un pedalo a pedales douces
+pouvoir.ali.718.nom=(Esquive) Ali doudou
+pouvoir.ali.718.inf=Esquive les anniversaires, ne vient plus aux soirees et peut desormais sauter un filet de tennis sans se retamer
+
+mission.ali.503.nom=Experience sensorielle
+mission.ali.503.inf=Survivre a la chaleur ecrasante de l'Espagne en inventant un style de jeu peu orthodoxe 'ave l'acceng' de la garrigue
+pouvoir.ali.731.nom=(Regen Vie Perso) Ice Pedoula Challenge
+pouvoir.ali.731.inf=Se regenere en s'allongant sur un canape et en se caressant sensuellement les tetons avec un glacon Antartica
+
+mission.ali.504.nom=Roulette pakistanaise
+mission.ali.504.inf=Tirer avec un pistolet dans une piece fermee sans savoir si il est charge, pour devenir cascadeur figurant terroriste
+pouvoir.ali.742.nom=(Brulure Mana Multi) Plein les yeux
+pouvoir.ali.742.inf=Tire un coup de pistolet lacrymogene en interieur pour bruler les yeux de ses ennemis et s'enfuit en se jetant par la fenetre
+
+mission.ali.505.nom=Heal the world
+mission.ali.505.inf=Ecrire une chanson qui redonne espoir en la vie, apres son mariage en secret avec Aicha 9 ans a ArabeLand
+pouvoir.ali.743.nom=(Resurrection Mono) Le chant de sucre rouge
+pouvoir.ali.743.inf=Redonne la vie a un allie en chantant et en melangeant quelques epices rougeatres en reference au sang verse dans les champs de canne a sucre
+
+mission.ali.506.nom=Cambriolage amical
+mission.ali.506.inf=Mener l'operation de penetration par effraction chez Yannick en utilisant ses qualites naturelles d'homme javelot cerf-volant
+pouvoir.ali.746.nom=(Taunt Multi) Operation Sex Piege
+pouvoir.ali.746.inf=Se coince dans une grille et baisse son froc pour provoquer les ennemis et les attirer tel un trou noir en criant niech niech
+
+mission.ali.507.nom=Le maitre et l'eleve
+mission.ali.507.inf=Admirer les techniques de combat sur chaise de Johann et en prendre de la graine de starloose academy
+pouvoir.ali.747.nom=(Stun Mono) Croche-mensonge
+pouvoir.ali.747.inf=Bloque l'ennemi avec ses jambes pour lui frotter son sexe sur le corps, et l'impregner d'une odeur de putois epicee entrainant l'evanouite
+
+mission.ali.508.nom=Mohamed Ali Jackson
+mission.ali.508.inf=Suivre les traces de son idole sous la contrainte de ses 5 soeurs et se battre pour atteindre son objectif sans se laisser rouler sur les chaussures noires
+pouvoir.ali.781.nom=(Degats Multi) Ali! Ali!
+pouvoir.ali.781.inf=Profite de l'engouement general pour se donner en spectacle bollywoodien, faire son one man chaud du rire sous l'oeil du grand blond et infliger des degats aux ennemis
+
+	##############
+	### THOMAS ###
+	##############
+
+mission.thomas.600.nom=La technique de la Tortue
+mission.thomas.600.inf=Developper son instinct de survie en inventant une technique personnelle de parade adapte a toutes les situations dangereuses
+pouvoir.thomas.512.nom=(Bouclier Perso) Tortue Dauphin Geniale
+pouvoir.thomas.512.inf=Se protege instinctivement en se creant un casque-carapace de bras a la vue d'un projectile ou d'une culotte afin d'eviter tout saignement nasal incontrole
+
+mission.thomas.601.nom=Danse avec les louveteaux
+mission.thomas.601.inf=Faire du feu et survivre a une nuit en foret en evitant les animaux, les betes et les trois doigts de Jackie Chang le moniteur
+pouvoir.thomas.517.nom=(Aura Multi - Intelligence) Scout en Schott
+pouvoir.thomas.517.inf=Son experience et son adaptabilite aux milieux hostiles lui permet d'invoquer une aura qui augmente l'Intelligence, la survivabilite et la scratchitude de ses allies
+
+mission.thomas.602.nom=Coagulation nasale
+mission.thomas.602.inf=Maitriser son flux et son reflux sanguin pour ne pas lacher la sauce et se vider involontairement en cas de choc pedestre
+pouvoir.thomas.531.nom=(Regen Vie Perso) Sang pur Sans coton
+pouvoir.thomas.531.inf=Utilise son sous-pull a col roule en licra ou tout objet absorbant a portee, pour arreter une quelconque hemorragie et se soigner
+
+mission.thomas.603.nom=Grand saigneur
+mission.thomas.603.inf=Inviter ses allies a squatter dans son apart, dans son jardin secret magique et dans la voiture-epave de son frere
+pouvoir.thomas.533.nom=(Regen Vie Multi) Seigneur Soigneur
+pouvoir.thomas.533.inf=Offre son hospitalite a ses peons squatters drogues dans son domaine, les amuse et les nourrit, ce qui leur redonne de la vie
+
+mission.thomas.604.nom=Pilou face
+mission.thomas.604.inf=Boursicoter mollement sur le cours de l'action du mouchoir pour amortir sa surconsommation menstruelle mise en branle avec l'erection des sites de bourses en ligne
+pouvoir.thomas.535.nom=(Absorb Vie Multi) Forfait Kleenex Millenium
+pouvoir.thomas.535.inf=Se mouche de maniere gratuite et illimitee les soirs et week-end avec des mouchoirs ultra-absorbants, absorbant meme la vie des ennemis
+
+mission.thomas.605.nom=Mange pas mes papiers
+mission.thomas.605.inf=Acheter un briquet a gaz hilarant et faire un aquarium asphyxiant en brulant du papier par cremation dans l'antichambre a air conditionne
+pouvoir.thomas.541.nom=(Brulure Mana Mono) Papier d'Armouni
+pouvoir.thomas.541.inf=Absorbe nasalement un retour de toncar en brulant du papier d'Armenie, le mana de l'ennemi et l'ennemi dans un four a Gaza
+
+mission.thomas.606.nom=Les regles en tete
+mission.thomas.606.inf=Utiliser son surplus sanguin nazifere a des fins curatives comme l'aurait fait la croix pas gamme rouge en periode de debarquement pour eviter les pertes
+pouvoir.thomas.543.nom=(Resurrection Mono) Soigne du pif
+pouvoir.thomas.543.inf=Redonne la vie a un allie en tombant dos a dos et en faisant du nez a nez grace a ses dons et a ses capacites de perfusion olfactive herculienne
+
+mission.thomas.607.nom=Expert en communication
+mission.thomas.607.inf=Faire une seance eclair de spiritisme dans son salon avec l'etincelant Claude Francois sans peter les plombs ni pisser dans le bain
+pouvoir.thomas.544.nom=(Resurrection Multi) Harmonie Extra-Sang-Soral
+pouvoir.thomas.544.inf=Sa connaissance courante de la Kabbale, lui a procure un don en communication afin de se tenir au jus, de contacter les morts et de les ressusciter
+
+mission.thomas.608.nom=Donnant-Donnant
+mission.thomas.608.inf=Gratter l'amitie avec 5 orphelines de l'est en leur payant un jus de fruit et en abandonnant son corps a la science en echange
+pouvoir.thomas.581.nom=(Degats Multi) Shoot Sans patate
+pouvoir.thomas.581.inf=Appelle a la rescousse Fred, son flingue a billes et l'encule de Steph pour l'attaque des trois freres donnant cent patates aux ennemis, puis les reprenant... Quand meme!
+	
+	###############
+	### YANNICK ###
+	###############
+
+mission.yannick.700.nom=Poker Face
+mission.yannick.700.inf=Ecraser une vogue menthol dans sa main quand ca sent le roussi et se bruler sans emotion pour ne pas se faire cramer, alors que c'est cuit
+pouvoir.yannick.412.nom=(Bouclier Perso) Meme pas mal
+pouvoir.yannick.412.inf=Se protege grace a son insensibilite naturelle aux brulures, au rap, au foot, a presque tout sauf a la prise de l'etouffement
+
+mission.yannick.701.nom=Lapidation dilapidante
+mission.yannick.701.inf=Resister sans assistance aux assauts incessants et insistants de ses assaillants en persistant et sans se desister
+pouvoir.yannick.414.nom=(Bouclier Multi) Defense de Jedi Knight
+pouvoir.yannick.414.inf=Protege ses allies grace a ses reflexes et son taux de midi-alcolo-rien eleve mais limite, l'empechant de tomber du cote obscur de la Forza
+
+mission.yannick.702.nom=Sainte Marie-Jeanne
+mission.yannick.702.inf=Rouler des graines de pavot avec un blunt mal seche pour atteindre le Nirvana et preciser que boire de l'eau annule les effets
+pouvoir.yannick.416.nom=(Aura Mono - Technique) Conseil d'ami
+pouvoir.yannick.416.inf=Invoque une aura violette ameliorant la Technique de consommation florale d'un allie comme la fameuse tulipe fanee triple vrillee et casquee en cappuccino frappe
+
+mission.yannick.703.nom=Celebration cyclique
+mission.yannick.703.inf=Participer au premier jour de l'an des familles, a base d'oeufs pourris, de main dans le caca et de traces de pneu enflammees
+pouvoir.yannick.417.nom=(Aura Multi - Resistance) Retour a la base
+pouvoir.yannick.417.inf=Invoque une aura permettant d'ameliorer l'accent russe et la Resistance de ses allies au froid, au 'Golden Gun' et aux tickets resto
+
+mission.yannick.704.nom=Sans contrefacon
+mission.yannick.704.inf=Mater l'integralite des 7 saisons de Buffy sans se branler et les 119 episodes d'Higlander sans se faire griller par sa soeur
+pouvoir.yannick.439.nom=(Absorb Mana Mono) Amante religieuse
+pouvoir.yannick.439.inf=Absorbe le mana de l'ennemi en lui plantant profondement son pieu, en lui tranchant la tete ou en le mordant, en le sucant et en avalant son mana
+
+mission.yannick.705.nom=Romance Romano-Romantique
+mission.yannick.705.inf=Ecraser sa Ryan Philip Morris et regarder une fois de plus 'Romeo + Juliette' en sachant pertinemment qu'a la fin le Titanic coulera
+pouvoir.yannick.442.nom=(Brulure Mana Multi) Juliette je t'aime
+pouvoir.yannick.442.inf=Empoisonne les ennemis sans capituler ni monter dans les aigus et fume leur mana allonge sur un banc en regardant les etoiles
+
+mission.yannick.706.nom=Ya Nickelback to the past
+mission.yannick.706.inf=Acheter une guitare et imposer son propre style musical et vestimentaire malgre la pression sociale de la masse
+pouvoir.yannick.446.nom=(Taunt Multi) FF Ya NTM
+pouvoir.yannick.446.inf=Met de la musique a contre-courant, un T-Shirt a manches courtes sur un T-Shirt a manches longues, un soutien-gorge et des Vans pour provoquer les ennemis
+
+mission.yannick.707.nom=A un poil pres
+mission.yannick.707.inf=Partir en viree nocturne pour une ratonnade de reverbere et ramener Yo chez lui avant que sa mere ne l'enferme sur le balcon
+pouvoir.yannick.448.nom=(Stun Multi) Peinture rupestre vole
+pouvoir.yannick.448.inf=Fait de memoire un saint dessin des seins de la mere de Yo non retouche par Mme Braquet et le montre aux ennemis pour les bloquer
+
+mission.yannick.708.nom=Quelle guepe t'as pique
+mission.yannick.708.inf=Faire passer 5 grammmes de shit au shampoing aux Etats-Unis et acheter de la beuh de Montreal puis revenir jouer a Braveheart entre deux parties de worms dictateurs
+pouvoir.yannick.481.nom=(Degats Multi) Banana Bombe Sainte
+pouvoir.yannick.481.inf=Effectue une frappe chirurgicale avec une bombe de type BOB-SA-66 sur les ennemis pour instaurer une democratie sainte et une republique bananiere
+
+	##############
+	### PIERRE ###
+	##############
+
+mission.pierre.800.nom=Spray buccal
+mission.pierre.800.inf=Regarder le film 'Il est revenu' et devenir asthmatique temporairement pour faire crari le babtou fragile et sensible
+pouvoir.pierre.302.nom=(Degats Multi) Pulverisation faciale
+pouvoir.pierre.302.inf=Asperge le visage de ses ennemis avec de la Ventoline et leur fait respirer une bouteille contenant du pet macere
+
+mission.pierre.801.nom=Theorie et Pratique
+mission.pierre.801.inf=Recevoir a noel des vetements pour etre habiller pour l'hiver ainsi qu'une bible et un livre sur l'onanisme
+pouvoir.pierre.313.nom=(Bouclier Mono) Fous ta cagoule
+pouvoir.pierre.313.inf=Protege un allie en lui pretant sa cagoule verte, ses bottes des sept lieux a semelles amovibles et ses pantoufles a gland
+
+mission.pierre.802.nom=Pierre 'Magic' Bellemarre
+mission.pierre.802.inf=Arreter de faire des flaques partout en etanchant sa soif et proteger son jeu de carte des intemperies et de soi-meme
+pouvoir.pierre.314.nom=(Bouclier Multi) Deck Slivovitz
+pouvoir.pierre.314.inf=Protege ses allies en invoquant un cercle de protection Artefact plastifie et gagne un bonus +1/+1 pour chaque personne lui commandant une bouteille
+
+mission.pierre.803.nom=La mole c'est dur
+mission.pierre.803.inf=Valider par l'experience personnelle le fait scientifique que certains organes poussent toute la vie
+pouvoir.pierre.317.nom=(Aura Multi - Agilite) Membres croissants
+pouvoir.pierre.317.inf=Invoque une aura permettant d'ameliorer l'Agilite et les sens des ses allies en developpant leurs organes externes comme le nez, les oreilles et la queue
+
+mission.pierre.804.nom=Pierre Paul Ciseau
+mission.pierre.804.inf=Inventer un jeu de main tirant profit des annees d'experience et d'entrainement de cette derniere
+pouvoir.pierre.334.nom=(Absorb Vie Mono) Serre main de fer
+pouvoir.pierre.334.inf=Absorbe la vie de son ennemi en lui serrant la main avec une poigne de fer, sans lui jeter la pierre, mais le bouchon de pinard Saint-Pujadas
+
+mission.pierre.805.nom=Soiree racaille
+mission.pierre.805.inf=Changer de coiffure pour un style moins chevelu et plus chevaleresque et de dress-code pour un style moins orthodoxe et plus racouillu
+pouvoir.pierre.338.nom=(Regen Mana Multi) Circoncision exquise
+pouvoir.pierre.338.inf=Redonne du mana a ses allies en excisant sa petite queue de cheveux magique demodee en echange d'une grande queue de cheval equitable
+
+mission.pierre.806.nom=Demain a la une
+mission.pierre.806.inf=Retourner dans le passe pour empecher ces fils de pute de japanese de se faire secteur-Analiser et torcher l'anus du monde
+pouvoir.pierre.343.nom=(Resurrection Mono) L'Almarak des sports
+pouvoir.pierre.343.inf=Retourne dans le passe pour rencontrer Marek, pere de Marak et fils de morse, ecouter son histoire ayant ni queue ni tete, et empecher la mort d'un allie
+
+mission.pierre.807.nom=Boys-Band a B-Boys
+mission.pierre.807.inf=Evoluer radicalement de style musical en passant de la merde commerciale francaise au rap commercial americain comme son frere
+pouvoir.pierre.346.nom=(Taunt Multi) Warren G Squad
+pouvoir.pierre.346.inf=Travaille son style de danseur rappeur en improvisant une choregraphie sans tete a queue pour provoquer les ennemis
+
+mission.pierre.808.nom=Optic 2000
+mission.pierre.808.inf=Rouler deux cones et descendre croquer un croc sans se taper de barre ou se casser les dents dans l'escalier pour ne pas se faire tricard par sa daronne qui dort d'un oeil sur ses 5 oreilles
+pouvoir.pierre.381.nom=(Degats Multi) Oeil pour Oeil, Dent pour Dent
+pouvoir.pierre.381.inf=Traite les ennemis en queue de peloton de la meme facon qu'ils ont traite ou voulu traiter ses allies grace a sa dent de fer et a sa mere borgne
+
+	###############
+	### NICOLAS ###
+	###############
+
+mission.nicolas.900.nom=Bas, R, Haut, L, Y, B
+mission.nicolas.900.inf=Regarder Blade Runner sans rien comprendre puis Best of the Best pour repliquer une technique de combat imparable
+pouvoir.nicolas.202.nom=(Degats Multi) L'attaque du Tigre et Dragon
+pouvoir.nicolas.202.inf=Encercle ses ennemis a lui tout seul en leur assenant des genou-kicks par derriere tel Alexander Grady en furie
+
+mission.nicolas.901.nom=Haut comme trois pommes
+mission.nicolas.901.inf=Realiser que quand les trois freres se montent sur les epaules, ils atteignent presque la taille d'un homme adulte
+pouvoir.nicolas.212.nom=(Bouclier Perso) Fraternanisme
+pouvoir.nicolas.212.inf=Appel a la rescousse Danielo dit 'La ponceuse de Madrid au doigt qui pue' et Marcou dit 'Le petit pedestre de Thriller briseur de carreau' pour se proteger
+
+mission.nicolas.902.nom=L'appel de la nature
+mission.nicolas.902.inf=Aller au stade de foot un dimanche et se rendre compte de la difficulte qu'ont eu tous nos ancetres de ne pas avoir eu l'eau courante et le PQ
+pouvoir.nicolas.217.nom=(Aura Multi - Exploit) Je suis malfaisant
+pouvoir.nicolas.217.inf=Invoque une aura qui augmente les Exploits de ses allies comme la capacite de se retenir pendant cinq jours ou a l'inverse de chier instantanement au contact de la nature
+
+mission.nicolas.903.nom=Antifioniste
+mission.nicolas.903.inf=Regarder matrix et se brancher un lecteur de disquette dans le sion pour connaitre le kung-fu, le krav-maga et le pencak-silat
+pouvoir.nicolas.218.nom=(Esquive) El Mefiento
+pouvoir.nicolas.218.inf=Esquive les attaques sans contacts en faisant des twist nuggets et protege son espace vital grace a une technique d'auto-defense bresilo-colombienne ancestrale
+
+mission.nicolas.904.nom=Extremes limites
+mission.nicolas.904.inf=Survivre a moult periples dont une lesion tetal fenestre, une fracture du tibia en escalier, une cagette nasifere volante et quelques molestages fraternels
+pouvoir.nicolas.231.nom=(Regen Vie Perso) Benediction divine
+pouvoir.nicolas.231.inf=Se regenere grace a ses pouvoirs magiques d'aigrison rapide, ses talents en fitness extremiste et son squelette en AdamEtEve-antuim rabougri
+
+mission.nicolas.905.nom=Les insectes sont nos amis
+mission.nicolas.905.inf=Attraper avant tout du papier cul puis chasser les araignees en farfouillant sous ses draps tous les soirs et vice et versa
+pouvoir.nicolas.234.nom=(Absorb Vie Mono) Le suce-sang
+pouvoir.nicolas.234.inf=Absorbe la vie de son ennemi en lui lancant des sangsues suceuses de sang faisant des sucons saignants sans susciter la suspission du suce sus-cite sous-jacent
+
+mission.nicolas.906.nom=J'ai les yeux rouges?
+mission.nicolas.906.inf=Se faire doucher par un enfant, lui faire manger ses parents et reprendre le commerce mafiamiliale avant de developper une double personnalite mi-gitan mi-chips mi-randa
+pouvoir.nicolas.241.nom=(Brulure Mana Mono) Vico Corleone
+pouvoir.nicolas.241.inf=Laisse son double malefique saoulant et grisonnant prendre le dessus et propose de tirer une taff de l'honneur barbituree irrefusable a l'ennemi pour lui fumer son ame de non-roux
+
+mission.nicolas.907.nom=No Pain No Gain
+mission.nicolas.907.inf=Faire un regime 'Ni pain Ni cola' puis se muscler la musculature en s'injectant des supo-steroides anal-bolisants au cafe, les couilles tartinees de beurre et de miel
+pouvoir.nicolas.248.nom=(Stun Multi) Hulk Logan Legout
+pouvoir.nicolas.248.inf=Bande ses muscles jusqu'a demouler un Arabinou de cafe ou jouis de ses propres contractions uterines ou mange des cereales en boite pour impressioner et bloquer les ennemis
+
+mission.nicolas.908.nom=Atchoum Simplet Joyeux
+mission.nicolas.908.inf=S'inspirer de Ricky morve au nez et se faire eternuer a la demande pour projetter 5 jets de slime sur les cibles plus grande et blanche que soi
+pouvoir.nicolas.281.nom=(Degats Multi) Grapina Nicolada
+pouvoir.nicolas.281.inf=Grappine tout ce qu'il peut et saoule fatalement ses ennemies pour terminer en 'Finish Him' qui arrache et dechire les membres grappines jusqu'a la moelle
+
+	##############
+	### JOHANN ###
+	##############
+
+mission.johann.1100.nom=Protection naturelle
+mission.johann.1100.inf=Pisser dans le bain sans s'endormir pour generer une fine pellicule odorante et repulsive sur la peau qui protege du soleil et des moustiques
+pouvoir.johann.112.nom=(Bouclier Perso) Golden Gun Shower
+pouvoir.johann.112.inf=Met son manteau carapace, prend du Jumanji, pisse dans l'escalier puis dans un pistolet a eau et s'asperge lui meme pour se proteger
+
+mission.johann.1101.nom=Defaillances temporelles
+mission.johann.1101.inf=Se deguiser en pute effeministe pour le carnaval, se voiler la face et ne jamais reussir a se resituer vestimentairement et musicalement dans l'espace et le temps
+pouvoir.johann.113.nom=(Bouclier Mono) Juvy dans mon cul
+pouvoir.johann.113.inf=Met des oeilleres, se coupe du monde et reste bloque dans le passe afin de creer une bulle nostalgique memorielle pour proteger un allie des ravages du temps
+
+mission.johann.1102.nom=Chatroulette
+mission.johann.1102.inf=Ne pas reussir a se faire voler son booster et son portable, se faire controler sans se faire choper mais se faire emprunter sa Playstation a vie
+pouvoir.johann.117.nom=(Aura Multi - Chance) Yo la charte
+pouvoir.johann.117.inf=Enroule un trefle a quatre feuilles pour gratter mille francs de Banco et ecrire sur les murs puis invoque une aura qui augmente la Chance de ses allies illico
+
+mission.johann.1103.nom=Guerre bacteriologique
+mission.johann.1103.inf=Lecher les murs, boire dans les flaques, prendre de la merde avec ses doigts et se laisser lecher par son chat
+pouvoir.johann.118.nom=(Esquive) Immunite Virtuelle
+pouvoir.johann.118.inf=S'isole pour jouer au meme Meuporg pendant 5 ans avec sa guilde et se nourrire uniquement de pain et de grecs pour esquiver toutes autres aggressions exterieurs
+
+mission.johann.1104.nom=Pere de claque
+mission.johann.1104.inf=Insister pour pouvoir assister a la soiree creperie avec ses potes et refaire la gueule en faisant greve de la faim avant de se faire decalquer le portrait au premier degre
+pouvoir.johann.131.nom=(Regen Vie Perso) D'une pierre deux couilles
+pouvoir.johann.131.inf=Se regenere en se malaxant regulierement la couille droite tout en mangeant une bonne escalope a point avec une tarte en dessert
+
+mission.johann.1105.nom=Amour vache
+mission.johann.1105.inf=Planter Judith, Thomas, Jonathan et Jeremy, recolter la dent de Pierre, repondre aux adultes puis ne plus etre invite aux anniversaires
+pouvoir.johann.139.nom=(Absorb Mana Mono) Fallait pas l'inviter
+pouvoir.johann.139.inf=Entame un debut de relation amicale avec son ennemi puis le plante soudainement avec ce qu'il peut dans un exces de folie exfoliant pour lui absorber son Mana
+
+mission.johann.1106.nom=La ronde du vautour
+mission.johann.1106.inf=Faire un nez d'aigle pour s'echauffer puis danser du rap en reculant mais toujours le doigt leve
+pouvoir.johann.145.nom=(Taunt Mono) Dance nazitude vol. 13
+pouvoir.johann.145.inf=Fait 33 tours autour de l'ennemi tel un rapace a l'affut de sa proie et le provoque en le clashant tecktonikement
+
+mission.johann.1107.nom=Magic Light
+mission.johann.1107.inf=Casser une vitre et tirer un coup de fusil sur un pneu a bout portant pour ricocher et eclater un lampadaire et mettre plein de morceaux d'etoiles dans les yeux de ses allies
+pouvoir.johann.147.nom=(Stun Mono) Perlimpinpin
+pouvoir.johann.147.inf=Effrite un peu de parmesan de gland affine de trois jours, le melange a du popo sable doux et jete de la poudre aux yeux de l'ennemi pour l'enfumer et le bloquer
+
+mission.johann.1108.nom=Sketch a chier
+mission.johann.1108.inf=Tomber malade chez Nico, avoir la soiffade, descendre les 5 marches de la gloire, chevaucher le trone des Walkyries et reciter une cantate a Carmina Burana
+pouvoir.johann.181.nom=(Degats Multi) Super Copter
+pouvoir.johann.181.inf=Chope la gastro et fait un debut de merde mal maitrise combine a la technique de l'helico pour emmerder litteralement les ennemis
+
+mission.jonathan.2061.nom=Joyeux Anniveraire Russ
+mission.jonathan.2061.inf=Repondre au Super Quizz de la mort
+
+mission.repetable.quizz.2062.nom=Question pour un champion
+mission.repetable.quizz.2062.inf=Repondre au Super Quizz de la mort
+
+mission.repetable.foot.ecole.5v5.3001.nom=Match dans la cours
+mission.repetable.foot.ecole.5v5.3001.inf=Contre les cancres de l'ecole
+
+mission.repetable.foot.terrain.5v5.3002.nom=Match au Terrain (5v5)
+mission.repetable.foot.terrain.5v5.3002.inf=Contre les gitans, les arabes ou les boulets
+mission.repetable.foot.terrain.6v6.3003.nom=Match au Terrain (6v6)
+mission.repetable.foot.terrain.6v6.3003.inf=Contre les gitans, les arabes ou les boulets
+mission.repetable.foot.terrain.7v7.3004.nom=Match au Terrain (7v7)
+mission.repetable.foot.terrain.7v7.3004.inf=Contre les gitans, les arabes ou les boulets
+mission.repetable.foot.terrain.8v8.3005.nom=Match au Terrain (8v8)
+mission.repetable.foot.terrain.8v8.3005.inf=Contre les gitans, les arabes ou les boulets
+
+mission.repetable.foot.chelles.7v7.3006.nom=Match a Chelles (7v7)
+mission.repetable.foot.chelles.7v7.3006.inf=Contre les potes de Fred ou les potes de Giani
+mission.repetable.foot.chelles.8v8.3007.nom=Match a Chelles (8v8)
+mission.repetable.foot.chelles.8v8.3007.inf=Contre les potes de Fred ou les potes de Giani
+
+mission.repetable.foot.noisy.5v5.3008.nom=Match a Noisy (5v5)
+mission.repetable.foot.noisy.5v5.3008.inf=Contre les potes de Tom ou les potes d'Hakim ou les potes de Bene
+mission.repetable.foot.noisy.6v6.3009.nom=Match a Noisy (6v6)
+mission.repetable.foot.noisy.6v6.3009.inf=Contre les potes de Tom ou les potes d'Hakim ou les potes de Bene
+
+
+######################################
+### LES MISSIONS BOSS ET MINI BOSS ###
+######################################
+
+	#####################
+	### MISSION FINAL ###
+	#####################
+
+mission.final.999.nom=Sortie du Jeu 'Le Terrain'
+mission.final.999.inf=Vous pouvez desormais y jouer!
+
+mission.final.1000.nom=Mission Finale
+mission.final.1000.inf=La fin justifie les moyens
+
+	#####################
+	### MISSIONS BOSS ###
+	#####################
+
+mission.boss.johann.1001.nom=(Boss Yo) D'abord la couille gauche
+mission.boss.johann.1001.inf=Defier son modele footbalistique!
+
+mission.boss.nicolas.1002.nom=(Boss Nico) Tombe raide dingue
+mission.boss.nicolas.1002.inf=Defier son fantasme videoludique!
+
+mission.boss.pierre.1003.nom=(Boss Pip) DJ Piero
+mission.boss.pierre.1003.inf=Defier son rappeur mythique!
+
+mission.boss.thomas.1004.nom=(Boss Tom) Suicide Squad
+mission.boss.thomas.1004.inf=Defier son patrimoine historique!
+
+mission.boss.yannick.1005.nom=(Boss Ya) Karmageddon
+mission.boss.yannick.1005.inf=Defier son pere cinematographique!
+
+mission.boss.ali.1006.nom=(Boss Ali) Balance ton porc
+mission.boss.ali.1006.inf=Defier son inspiration artistique!
+
+mission.boss.guillaume.1007.nom=(Boss Guy) Docteur Jones
+mission.boss.guillaume.1007.inf=Defier son comportement phobique!
+
+mission.boss.jonathan.1008.nom=(Boss Russ) 5 fruits et legumes et mythos
+mission.boss.jonathan.1008.inf=Defier son pendant mythologique!
+
+	##########################
+	### MISSIONS MINI BOSS ###
+	##########################
+
+mission.miniboss.1011.nom=(Boss) Fin du CP
+mission.miniboss.1011.inf=Bouffer la chatte de Mme Chatelain!
+
+mission.miniboss.1012.nom=(Boss) Fin du CE1
+mission.miniboss.1012.inf=Deboiser la chatte de Mme Dubois!
+
+mission.miniboss.1013.nom=(Boss) Fin du CE2
+mission.miniboss.1013.inf=Couper les cheveux de Mme Durand et acheter des dents a Mme Oudni!
+
+mission.miniboss.1014.nom=(Boss) Fin du CM1
+mission.miniboss.1014.inf=Defoncer les dessins de Mme Braquet!
+
+mission.miniboss.1015.nom=(Boss) Fin du CM2
+mission.miniboss.1015.inf=Deboucher le cul de Mr Boucherat!
+
+
+	################################
+	### LES MISSIONS SECONDAIRES ###
+	################################
+	
+	
+	###############################
+	### LES MISSIONS REPETABLES ###
+	###############################
+
+
+
+#########################
+### PARAMETRES DU JEU ###
+#########################
+
+	##################
+	### JEU COMBAT ###
+	##################
+
+# Nombre d ennemis supplementaires en fonction de la difficulte (Par defaut nbEnnemi = nbAmis)
+jeu.combat.facile.ennemis.supplementaires.min=0
+jeu.combat.facile.ennemis.supplementaires.max=1
+
+jeu.combat.normal.ennemis.supplementaires.min=0
+jeu.combat.normal.ennemis.supplementaires.max=1
+
+jeu.combat.difficile.ennemis.supplementaires.min=0
+jeu.combat.difficile.ennemis.supplementaires.max=2
+
+jeu.combat.heroique.ennemis.supplementaires.min=1
+jeu.combat.heroique.ennemis.supplementaires.max=2
+
+# Chance de fuite en fonction de la difficulte et du nombre d'ennemis restants (20% min - 80% max)
+
+# Chance de fuite en fonction du nombre d'ennemis restants (en %)
+jeu.combat.chance.fuite.ennemis.2=40
+jeu.combat.chance.fuite.ennemis.4=30
+jeu.combat.chance.fuite.ennemis.6=20
+jeu.combat.chance.fuite.ennemis.8=10
+
+# Chance de fuite en fonction de la difficulte (en %)
+jeu.combat.chance.fuite.facile=40
+jeu.combat.chance.fuite.normal=30
+jeu.combat.chance.fuite.difficile=20
+jeu.combat.chance.fuite.heroique=10
+
+# Initiative (Chance que l'equipe debute le combat en premier) en fonction de la difficulte (en %)
+jeu.combat.chance.initiative.facile=100
+jeu.combat.chance.initiative.normal=75
+jeu.combat.chance.initiative.difficile=50
+jeu.combat.chance.initiative.heroique=25
+
+# Temps par tour (en seconde) par joueur en fonction de la difficulte et du nombre de perso ('valeur' * nbPersoAmisVivants)
+# Si 0 => pas de timer
+jeu.combat.timer.facile=0
+jeu.combat.timer.normal=10
+jeu.combat.timer.difficile=7
+jeu.combat.timer.heroique=5
+
+# Messages de fuite
+jeu.combat.chance.fuite.message.reussi=Vous avez reussi a fuir.
+jeu.combat.chance.fuite.message.rate=Vous n'avez pas reussi a fuir.
+
+
+	############
+	### ARME ###
+	############
+
+# Chance de looter du Vert, Bleu, Violet en Facile (en %)
+arme.creation.random.classe.facile.vert=80
+arme.creation.random.classe.facile.bleu=40
+arme.creation.random.classe.facile.violet=25
+
+# Chance de looter du Vert, Bleu, Violet en Normal (en %)
+arme.creation.random.classe.normal.vert=70
+arme.creation.random.classe.normal.bleu=35
+arme.creation.random.classe.normal.violet=20
+
+# Chance de looter du Vert, Bleu, Violet en Difficile (en %)
+arme.creation.random.classe.difficile.vert=60
+arme.creation.random.classe.difficile.bleu=30
+arme.creation.random.classe.difficile.violet=15
+
+# Chance de looter du Vert, Bleu, Violet en Heroique (en %)
+arme.creation.random.classe.heroique.vert=50
+arme.creation.random.classe.heroique.bleu=25
+arme.creation.random.classe.heroique.violet=10
+
+# Degats minimum de l'arme en fonction de la difficulte (entre 0 et 'valeur')
+arme.creation.random.degats.min.facile=20
+arme.creation.random.degats.min.normal=30
+arme.creation.random.degats.min.difficile=40
+arme.creation.random.degats.min.heroique=50
+
+# Degats maximum de l'arme en fonction de la difficulte (entre 0 et 'valeur')
+arme.creation.random.degats.max.facile=40
+arme.creation.random.degats.max.normal=60
+arme.creation.random.degats.max.difficile=80
+arme.creation.random.degats.max.heroique=100
+
+# Degats minimum de l'arme en fonction de la classe (entre 0 et 'valeur')
+arme.creation.random.degats.min.gris=20
+arme.creation.random.degats.min.vert=30
+arme.creation.random.degats.min.bleu=40
+arme.creation.random.degats.min.violet=50
+
+# Degats maximum de l'arme en fonction de la classe (entre 0 et 'valeur')
+arme.creation.random.degats.max.gris=40
+arme.creation.random.degats.max.vert=60
+arme.creation.random.degats.max.bleu=80
+arme.creation.random.degats.max.violet=100
+
+# Bonus de stat en fonction de la classe 
+#arme.creation.random.bonus.stat.gris=0 - Pas de bonus si c'est du gris
+arme.creation.random.bonus.stat.vert=5
+arme.creation.random.bonus.stat.bleu=10
+arme.creation.random.bonus.stat.violet=15
+
+# Bonus de stat en fonction de la difficulte
+arme.creation.random.bonus.stat.facile=5
+arme.creation.random.bonus.stat.normal=10
+arme.creation.random.bonus.stat.difficile=15
+arme.creation.random.bonus.stat.heroique=20
+
+# Chance que les ennemis possede une arme en fonction de la difficulte
+arme.creation.random.ennemi.facile=20
+arme.creation.random.ennemi.normal=40
+arme.creation.random.ennemi.difficile=60
+arme.creation.random.ennemi.heroique=80
+
+
+	##############
+	### DROGUE ###
+	##############
+
+# Chance de looter du Vert, Bleu, Violet en Facile (en %)
+drogue.creation.random.classe.facile.vert=40
+drogue.creation.random.classe.facile.bleu=20
+drogue.creation.random.classe.facile.violet=10
+
+# Chance de looter du Vert, Bleu, Violet en Normal (en %)
+drogue.creation.random.classe.normal.vert=30
+drogue.creation.random.classe.normal.bleu=15
+drogue.creation.random.classe.normal.violet=5
+
+# Chance de looter du Vert, Bleu, Violet en Difficile (en %)
+drogue.creation.random.classe.difficile.vert=20
+drogue.creation.random.classe.difficile.bleu=10
+drogue.creation.random.classe.difficile.violet=3
+
+# Chance de looter du Vert, Bleu, Violet en Heroique (en %)
+drogue.creation.random.classe.heroique.vert=10
+drogue.creation.random.classe.heroique.bleu=5
+drogue.creation.random.classe.heroique.violet=1
+
+# Prix min et max des drogues a l'unite (au gramme) et vitesse de peremption (de 5:lent a 1:rapide) et bonus par stat
+drogue.prix.pavot.min=15
+drogue.prix.pavot.max=50
+drogue.peremption.pavot=5
+
+drogue.bonus.pavot.chance=1
+drogue.bonus.pavot.endurance=2
+drogue.bonus.pavot.technique=0
+drogue.bonus.pavot.exploit=0
+drogue.bonus.pavot.rapidite=0
+drogue.bonus.pavot.resistance=0
+drogue.bonus.pavot.agilite=1
+drogue.bonus.pavot.intelligence=0
+drogue.bonus.pavot.nervosite=0
+
+drogue.prix.herbe.min=30
+drogue.prix.herbe.max=240
+drogue.peremption.herbe=1
+
+drogue.bonus.herbe.chance=1
+drogue.bonus.herbe.endurance=0
+drogue.bonus.herbe.technique=1
+drogue.bonus.herbe.exploit=0
+drogue.bonus.herbe.rapidite=0
+drogue.bonus.herbe.resistance=0
+drogue.bonus.herbe.agilite=0
+drogue.bonus.herbe.intelligence=2
+drogue.bonus.herbe.nervosite=0
+
+drogue.prix.canabis.min=50
+drogue.prix.canabis.max=100
+drogue.peremption.canabis=5
+
+drogue.bonus.canabis.chance=0
+drogue.bonus.canabis.endurance=1
+drogue.bonus.canabis.technique=0
+drogue.bonus.canabis.exploit=2
+drogue.bonus.canabis.rapidite=0
+drogue.bonus.canabis.resistance=1
+drogue.bonus.canabis.agilite=0
+drogue.bonus.canabis.intelligence=0
+drogue.bonus.canabis.nervosite=0
+
+drogue.prix.champignon.min=50
+drogue.prix.champignon.max=400
+drogue.peremption.champignon=2
+
+drogue.bonus.champignon.chance=0
+drogue.bonus.champignon.endurance=0
+drogue.bonus.champignon.technique=1
+drogue.bonus.champignon.exploit=0
+drogue.bonus.champignon.rapidite=0
+drogue.bonus.champignon.resistance=0
+drogue.bonus.champignon.agilite=0
+drogue.bonus.champignon.intelligence=1
+drogue.bonus.champignon.nervosite=2
+
+drogue.prix.speed.min=100
+drogue.prix.speed.max=600
+drogue.peremption.speed=3
+
+drogue.bonus.speed.chance=0
+drogue.bonus.speed.endurance=0
+drogue.bonus.speed.technique=0
+drogue.bonus.speed.exploit=0
+drogue.bonus.speed.rapidite=2
+drogue.bonus.speed.resistance=0
+drogue.bonus.speed.agilite=1
+drogue.bonus.speed.intelligence=0
+drogue.bonus.speed.nervosite=1
+
+drogue.prix.poppers.min=150
+drogue.prix.poppers.max=600
+drogue.peremption.poppers=4
+
+drogue.bonus.poppers.chance=0
+drogue.bonus.poppers.endurance=1
+drogue.bonus.poppers.technique=0
+drogue.bonus.poppers.exploit=0
+drogue.bonus.poppers.rapidite=0
+drogue.bonus.poppers.resistance=2
+drogue.bonus.poppers.agilite=1
+drogue.bonus.poppers.intelligence=0
+drogue.bonus.poppers.nervosite=0
+
+drogue.prix.extasy.min=200
+drogue.prix.extasy.max=1200
+drogue.peremption.extasy=4
+
+drogue.bonus.extasy.chance=0
+drogue.bonus.extasy.endurance=0
+drogue.bonus.extasy.technique=0
+drogue.bonus.extasy.exploit=1
+drogue.bonus.extasy.rapidite=1
+drogue.bonus.extasy.resistance=0
+drogue.bonus.extasy.agilite=0
+drogue.bonus.extasy.intelligence=2
+drogue.bonus.extasy.nervosite=0
+
+drogue.prix.heroine.min=300
+drogue.prix.heroine.max=1800
+drogue.peremption.heroine=3
+
+drogue.bonus.heroine.chance=0
+drogue.bonus.heroine.endurance=0
+drogue.bonus.heroine.technique=0
+drogue.bonus.heroine.exploit=1
+drogue.bonus.heroine.rapidite=0
+drogue.bonus.heroine.resistance=0
+drogue.bonus.heroine.agilite=2
+drogue.bonus.heroine.intelligence=1
+drogue.bonus.heroine.nervosite=0
+
+drogue.prix.mdma.min=300
+drogue.prix.mdma.max=2400
+drogue.peremption.mdma=3
+
+drogue.bonus.mdma.chance=0
+drogue.bonus.mdma.endurance=2
+drogue.bonus.mdma.technique=0
+drogue.bonus.mdma.exploit=0
+drogue.bonus.mdma.rapidite=0
+drogue.bonus.mdma.resistance=1
+drogue.bonus.mdma.agilite=0
+drogue.bonus.mdma.intelligence=0
+drogue.bonus.mdma.nervosite=1
+
+drogue.prix.cocaine.min=350
+drogue.prix.cocaine.max=1400
+drogue.peremption.cocaine=3
+
+drogue.bonus.cocaine.chance=0
+drogue.bonus.cocaine.endurance=0
+drogue.bonus.cocaine.technique=0
+drogue.bonus.cocaine.exploit=0
+drogue.bonus.cocaine.rapidite=1
+drogue.bonus.cocaine.resistance=2
+drogue.bonus.cocaine.agilite=0
+drogue.bonus.cocaine.intelligence=0
+drogue.bonus.cocaine.nervosite=1
+
+drogue.prix.amphetamine.min=400
+drogue.prix.amphetamine.max=3200
+drogue.peremption.amphetamine=3
+
+drogue.bonus.amphetamine.chance=0
+drogue.bonus.amphetamine.endurance=1
+drogue.bonus.amphetamine.technique=0
+drogue.bonus.amphetamine.exploit=2
+drogue.bonus.amphetamine.rapidite=0
+drogue.bonus.amphetamine.resistance=1
+drogue.bonus.amphetamine.agilite=0
+drogue.bonus.amphetamine.intelligence=0
+drogue.bonus.amphetamine.nervosite=0
+
+drogue.prix.lsd.min=500
+drogue.prix.lsd.max=2000
+drogue.peremption.lsd=3
+
+drogue.bonus.lsd.chance=1
+drogue.bonus.lsd.endurance=0
+drogue.bonus.lsd.technique=2
+drogue.bonus.lsd.exploit=1
+drogue.bonus.lsd.rapidite=0
+drogue.bonus.lsd.resistance=0
+drogue.bonus.lsd.agilite=0
+drogue.bonus.lsd.intelligence=0
+drogue.bonus.lsd.nervosite=0
+
+drogue.prix.cristal.min=500
+drogue.prix.cristal.max=4000
+drogue.peremption.cristal=3
+
+drogue.bonus.cristal.chance=1
+drogue.bonus.cristal.endurance=1
+drogue.bonus.cristal.technique=1
+drogue.bonus.cristal.exploit=1
+drogue.bonus.cristal.rapidite=1
+drogue.bonus.cristal.resistance=1
+drogue.bonus.cristal.agilite=1
+drogue.bonus.cristal.intelligence=1
+drogue.bonus.cristal.nervosite=1
+
+drogue.prix.ghb.min=500
+drogue.prix.ghb.max=5000
+drogue.peremption.ghb=4
+
+drogue.bonus.ghb.chance=2
+drogue.bonus.ghb.endurance=0
+drogue.bonus.ghb.technique=1
+drogue.bonus.ghb.exploit=0
+drogue.bonus.ghb.rapidite=1
+drogue.bonus.ghb.resistance=0
+drogue.bonus.ghb.agilite=0
+drogue.bonus.ghb.intelligence=0
+drogue.bonus.ghb.nervosite=0
+
+
+
+
+
+
+]*
+
+---

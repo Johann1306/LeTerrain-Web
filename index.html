@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Terrain - Ultimate Training</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles/hub.css?v=1.3">
+
+</head>
+
+<body class="retro-bg">
+    <div class="parallax-bg">
+        <div class="layer layer-1"></div>
+        <div class="layer layer-2"></div>
+        <div class="layer layer-3"></div>
+    </div>
+    <div class="crt-overlay"></div>
+
+    <div id="app">
+        <header>
+            <h1 class="glitch" data-text="LE TERRAIN">LE TERRAIN</h1>
+            <p class="subtitle">Le retour de la revanche</p>
+            <div class="menu-actions">
+                <button id="highScoresBtn" class="btn-retro">HIGH SCORES</button>
+            </div>
+        </header>
+
+        <main id="hub">
+            <div class="character-grid" id="charGrid">
+                <!-- Personnages générés dynamiquement par le JS -->
+            </div>
+
+            <div class="reset-container">
+                <button id="resetBtn" class="btn-retro">RESET</button>
+            </div>
+        </main>
+
+        <!-- Modals -->
+        <div id="modalContainer" class="modal-overlay hidden">
+            <div id="registrationModal" class="modal-content hidden">
+                <h2 class="retro-title">NEW PLAYER</h2>
+                <p>ENTER YOUR PSEUDO</p>
+                <div class="pseudo-input-container">
+                    <input type="text" id="pseudoInput" maxlength="3" placeholder="___" autofocus>
+                </div>
+                <button id="savePseudoBtn" class="btn-retro">START</button>
+            </div>
+
+            <div id="leaderboardModal" class="modal-content hidden">
+                <h2 class="retro-title">TOP 10 SCORES</h2>
+                <div id="leaderboardList" class="leaderboard-list">
+                    <!-- Leaderboard items go here -->
+                </div>
+                <button id="closeLeaderboardBtn" class="btn-retro">CLOSE</button>
+            </div>
+        </div>
+
+        <footer id="status-bar">
+            Chargement des données...
+        </footer>
+    </div>
+
+    <script type="module" src="./js/main.js?v=1.3"></script>
+</body>
+
+</html>
