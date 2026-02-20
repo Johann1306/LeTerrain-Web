@@ -46,6 +46,7 @@ export class SaveManager {
                 guillaume: 0,
                 jonathan: 0
             },
+            completedMissions: [],
             discoveredPowers: [],
             lastPlayed: new Date().toISOString()
         };
@@ -97,13 +98,31 @@ export class SaveManager {
 
     updateStat(charId, level) {
         if (this.playerData.stats[charId] !== undefined) {
-            this.playerData.stats[charId] = Math.max(this.playerData.stats[charId], level);
+            this.playerData.stats[charId] = Math.min(level, 3);
             this.savePlayer();
         }
     }
 
     getStat(charId) {
         return this.playerData.stats[charId] || 0;
+    }
+
+    completeMission(missionId) {
+        if (!this.playerData.completedMissions) {
+            this.playerData.completedMissions = [];
+        }
+        if (!this.playerData.completedMissions.includes(missionId)) {
+            this.playerData.completedMissions.push(missionId);
+            this.savePlayer();
+        }
+    }
+
+    isMissionCompleted(missionId) {
+        return (this.playerData.completedMissions || []).includes(missionId);
+    }
+
+    getCompletedMissions() {
+        return this.playerData.completedMissions || [];
     }
 
     reset() {

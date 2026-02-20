@@ -1,0 +1,194 @@
+/* finalgame.css */
+
+#rpgScreen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #050510;
+    color: #00ff00;
+    font-family: 'Press Start 2P', monospace;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+}
+
+/* Header */
+.rpg-header {
+    margin-top: 2rem;
+    text-align: center;
+    text-shadow: 2px 2px 0px #ff00ff;
+}
+
+/* Arena */
+.rpg-arena {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
+    max-width: 800px;
+    flex-grow: 1;
+    margin: 2rem 0;
+    background: rgba(0, 255, 0, 0.05);
+    border: 4px solid #00ff00;
+    border-radius: 10px;
+    padding: 2rem;
+    position: relative;
+    box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.2);
+}
+
+.fighter-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+}
+
+.fighter-card h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #ffffff;
+    text-shadow: 1px 1px 0px #ff00ff;
+}
+
+/* Sprites */
+.sprite-container {
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.sprite {
+    font-size: 4rem;
+    transition: transform 0.1s ease-out;
+}
+
+.vs-text {
+    font-size: 2rem;
+    color: #ff00ff;
+    text-shadow: 2px 2px 0px white;
+    animation: pulse 1s infinite alternate;
+}
+
+/* Health Bars */
+.hp-bar-container {
+    width: 100%;
+    height: 20px;
+    background-color: #330000;
+    border: 2px solid white;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.hp-fill {
+    height: 100%;
+    background-color: #ff0000;
+    width: 100%;
+    transition: width 0.3s ease-out;
+}
+
+.hero-card .hp-fill {
+    background-color: #00ff00;
+}
+
+.hp-text {
+    font-size: 0.7rem;
+    color: white;
+}
+
+/* Combat Log */
+.rpg-log-container {
+    width: 90%;
+    max-width: 800px;
+    height: 150px;
+    background: #000;
+    border: 2px solid #00ff00;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.combat-log {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.combat-msg {
+    font-size: 0.7rem;
+    line-height: 1.2;
+    color: #bbbbbb;
+}
+
+.combat-msg.dmg {
+    color: #ff5555;
+}
+
+.combat-msg.crit {
+    color: #ff00ff;
+    font-weight: bold;
+    text-shadow: 1px 1px 0px black;
+}
+
+.combat-msg.dodge {
+    color: #55aaff;
+    font-style: italic;
+}
+
+.combat-msg.heal {
+    color: #55ff55;
+}
+
+/* Actions */
+.rpg-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.btn-flee {
+    background-color: #ff0000;
+    color: white;
+}
+.btn-flee:hover {
+    background-color: white;
+    color: #ff0000;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(0.9); opacity: 0.8; }
+    100% { transform: scale(1.1); opacity: 1; }
+}
+
+.hit-shake {
+    animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-2px, 0, 0); filter: drop-shadow(0 0 10px red); }
+    20%, 80% { transform: translate3d(4px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+    40%, 60% { transform: translate3d(8px, 0, 0); }
+}
+
+/* Custom Scrollbar for log */
+.rpg-log-container::-webkit-scrollbar {
+    width: 8px;
+}
+.rpg-log-container::-webkit-scrollbar-track {
+    background: #000;
+}
+.rpg-log-container::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border-radius: 4px;
+}

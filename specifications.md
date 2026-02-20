@@ -18,7 +18,7 @@ Créer une "Gaming Suite" en HTML5/JS (Canvas) contenant 8 mini-jeux d'entraîne
 
 ## 2. INTERFACE "LE HUB"
 
-* **Style :** Interface de sélection de personnage type "Street Fighter" mais version "Terrain/Banlieue". police : "Press Start 2P". ambiance et design retrogaming mais avec des effets modernes, tape aà l'oeil et spectaculaires
+* **Style :** Interface de sélection de personnage type "Street Fighter" mais version "Terrain/Banlieue". police : "Press Start 2P". ambiance et design retrogaming mais avec des effets modernes, tape à l'oeil et spectaculaires
 * **Data :** Affiche les 8 têtes des potes. Sous chaque tête, une barre de progression de la Statistique associée (ex: "Rapidité : Niveau 2/3").
 * **Le Verrou :** Le bouton "MISSION FINALE" au centre est bloqué tant que toutes les stats ne sont pas au niveau 1 minimum.
 
@@ -134,14 +134,49 @@ C'est ici que tout prend sens. Ce n'est pas un jeu d'arcade, c'est une simulatio
 * **Structure :** Un "Dungeon Crawler" linéaire où le héros (Avatar du Joueur) avance sur une carte (Le Terrain).
 * **Les Ennemis :** Il rencontre des groupes d'ennemis tirés du fichier (`ennemi.noms.gitan`, `ennemi.noms.arabe`, etc.).
 * **Le Combat (Auto-Battler) :**
-* Le combat est automatique. Le joueur REGARDE son perso se battre.
-* Si le joueur a beaucoup de **Rapidité** (Jeu Ali), son perso tape 2x plus souvent.
-* Si le joueur a beaucoup d'**Intelligence** (Jeu Thomas), son perso se soigne tout seul quand il est blessé.
-* Si le joueur a beaucoup de **Chance** (Jeu Johann), il fait des Critiques (x2 dégâts).
+  * Le combat est automatique. Le joueur REGARDE son perso se battre.
+  * **Exploit** (Nicolas) : Augmente la puissance des coups (Dégâts bruts).
+  * **Rapidité** (Ali) : Le perso tape plus vite et plus souvent (Vitesse d'action).
+  * **Chance** (Johann) : Augmente le % de faire des Coups Critiques (Dégâts x2).
+  * **Agilité** (Pierre) : Augmente la probabilité d'esquiver les attaques ennemies.
+  * **Technique** (Guillaume) : Augmente la Précision (moins de chances de louper un coup).
+  * **Résistance** (Yannick) : Réduit les dégâts encaissés (Défense).
+  * **Intelligence** (Thomas) : Le perso se soigne tout seul durant le combat (Régénération).
+  * **Endurance** (Jonathan) : Augmente le total de Points de Vie (PV Max).
 
 
 * **Le Boss Final :** Une succession des "Boss" du fichier properties (ex: "Boss Nico", "Boss Pip").
 * **Condition de Victoire :** Arriver au bout de la rue. Si on meurt -> Game Over -> Retour au HUB -> "Va t'entraîner sur les mini-jeux pour monter tes stats !".
+
+---
+
+## 5. INSTRUCTIONS DE DÉVELOPPEMENT (PHASE 1)
+
+Pour commencer, je veux que tu génères **l'architecture du projet**.
+
+1. **Parse le fichier `leTerrain.properties**` (ci-joint) et stocke les données (Personnages, Stats, Lore, Citations, Pouvoirs) dans un objet JSON global `GameData`.
+2. Crée le **HTML/CSS du HUB Principal** :
+* Une grille sombre, style néon/urbain.
+* 8 Cartes personnages (avec Nom + Stat + Barre de progression niveau 0 à 3).
+* Une petite icône d'information supplémentaire (ex: "ℹ️") cliquable sur chaque bouton de personnage.
+* Le bouton central "MISSION FINALE" (Grisé avec cadenas).
+* Au clic sur une carte (hors icône info), lance un placeholder "Lancement du jeu...".
+
+3. **La Modale d'Information du Personnage :**
+* S'ouvre au clic sur l'icône d'info du personnage.
+* Doit afficher une interface visuellement agréable (style rétro, avec des animations CSS pour ne pas faire "livre statique").
+* **Infos à afficher (issues du fichier properties) :** 
+  * `message.dieu` (lore).
+  * `surnom.principal`.
+  * `surnom.secondaires` (un aléatoirement parmi la liste, différent à chaque réouverture).
+  * `origines`.
+* **Liste des 9 Pouvoirs du Personnage :**
+  * Le 1er pouvoir acquis par défaut au départ (101, 201, 301... 801) est clairement mis en valeur.
+  * Les pouvoirs suivants à débloquer sont visibles mais grisés (verrouillés).
+  * Chaque pouvoir s'accompagne d'une icône représentative de son nom/description.
+  * Le dernier pouvoir de chaque perso (181, 281, 381, 481, 581, 681, 781, 882) est un pouvoir **SPECIAL** qui bénéficie d'une mise en valeur visuelle distincte (couleurs, effets, animations).
+
+4. Prépare la logique de sauvegarde (`localStorage`) pour conserver les niveaux de stats.
 
 ---
 

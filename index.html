@@ -8,7 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles/hub.css?v=1.3">
+    <link rel="stylesheet" href="./styles/hub.css?v=1.5">
+    <link rel="stylesheet" href="./styles/finalgame.css?v=1.0">
 
 </head>
 
@@ -39,6 +40,51 @@
             </div>
         </main>
 
+        <!-- Final Game Auto-Battler Screen -->
+        <main id="rpgScreen" class="hidden">
+            <div class="rpg-header">
+                <h2>LE TERRAIN RPG</h2>
+            </div>
+
+            <div class="rpg-arena">
+                <!-- Hero Section -->
+                <div class="fighter-card hero-card">
+                    <h3 id="heroName">Héros</h3>
+                    <div class="sprite-container">
+                        <div id="heroSprite" class="sprite">🧍</div>
+                    </div>
+                    <div class="hp-bar-container">
+                        <div id="heroHpFill" class="hp-fill"></div>
+                    </div>
+                    <div id="heroHpText" class="hp-text">100 / 100</div>
+                </div>
+
+                <!-- VS text -->
+                <div class="vs-text">VS</div>
+
+                <!-- Enemy Section -->
+                <div class="fighter-card enemy-card">
+                    <h3 id="enemyName">Ennemi</h3>
+                    <div class="sprite-container">
+                        <div id="enemySprite" class="sprite">👹</div>
+                    </div>
+                    <div class="hp-bar-container">
+                        <div id="enemyHpFill" class="hp-fill"></div>
+                    </div>
+                    <div id="enemyHpText" class="hp-text">100 / 100</div>
+                </div>
+            </div>
+
+            <!-- Combat Log -->
+            <div class="rpg-log-container">
+                <div id="combatLog" class="combat-log"></div>
+            </div>
+
+            <div class="rpg-actions">
+                <button id="fleeBtn" class="btn-retro btn-flee">FUIR</button>
+            </div>
+        </main>
+
         <!-- Modals -->
         <div id="modalContainer" class="modal-overlay hidden">
             <div id="registrationModal" class="modal-content hidden">
@@ -57,6 +103,57 @@
                 </div>
                 <button id="closeLeaderboardBtn" class="btn-retro">CLOSE</button>
             </div>
+
+            <!-- Character Info Modal -->
+            <div id="charInfoModal" class="modal-content hidden char-info-modal">
+                <div class="char-info-header">
+                    <div class="char-info-avatar" id="infoAvatar"></div>
+                    <div>
+                        <h2 class="retro-title" id="infoName">Nom</h2>
+                        <h3 class="subtitle" id="infoStat">Stat</h3>
+                    </div>
+                </div>
+
+                <div class="char-lore-section">
+                    <p id="infoLore" class="lore-text">"Message de Dieu"</p>
+                </div>
+
+                <div class="char-details-section">
+                    <p><strong>A.K.A:</strong> <span id="infoNicknames"></span></p>
+                    <p><strong>Origines:</strong> <span id="infoOrigin"></span></p>
+                </div>
+
+                <div class="char-powers-section">
+                    <h3 class="powers-title">- COMPETENCES -</h3>
+                    <div id="infoPowersList" class="powers-list">
+                        <!-- Powers injected here -->
+                    </div>
+                </div>
+
+                <div class="char-info-actions">
+                    <button id="closeInfoBtn" class="btn-retro">RETOUR</button>
+                </div>
+            </div>
+
+            <!-- Character Missions Modal -->
+            <div id="charMissionsModal" class="modal-content hidden char-info-modal">
+                <div class="char-info-header">
+                    <div class="char-info-avatar" id="missionsAvatar"></div>
+                    <div>
+                        <h2 class="retro-title" id="missionsName">Missions</h2>
+                        <h3 class="subtitle" id="missionsStat"></h3>
+                    </div>
+                </div>
+
+                <h3 class="powers-title">- MISSIONS -</h3>
+                <div id="missionsList" class="missions-list">
+                    <!-- Missions injected here -->
+                </div>
+
+                <div class="char-info-actions">
+                    <button id="closeMissionsBtn" class="btn-retro">RETOUR</button>
+                </div>
+            </div>
         </div>
 
         <footer id="status-bar">
@@ -64,7 +161,7 @@
         </footer>
     </div>
 
-    <script type="module" src="./js/main.js?v=1.3"></script>
+    <script type="module" src="./js/main.js?v=1.5"></script>
 </body>
 
 </html>
