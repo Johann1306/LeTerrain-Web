@@ -8,84 +8,134 @@ export class CombatEntity {
         this.maxHp = 100;
         this.hp = 100;
         this.dmg = 10;
-        this.attackSpeed = 2000; // ms between attacks
-        this.critChance = 0.05; // 5% base
-        this.dodgeChance = 0.05; // 5% base
-        this.precision = 0.90; // 90% chance to hit
-        this.defense = 0; // dmg reduction
-        this.regen = 0; // HP per attack cycle
-
+        this.attackSpeed = 2000; // ms between attacks (basé sur la vitesse)
+        this.critChance = 0.05; // Chance de critique
+        this.dodgeChance = 0.05; // Chance d'esquive
+        this.precision = 0.90; // Précision de base
+        this.defense = 0; // Réduction des dégâts
+        this.regen = 0; // Régénération de HP
+        this.mana = 100; // Mana initial
+        this.rage = 0; // Barre de rage initiale
         this.lastAttackTime = 0;
+
+        // Stats personnalisées (à charger depuis le saveManager)
+        this.chanceLevel = 0;
+        this.exploitLevel = 0;
+        this.agilityLevel = 0;
+        this.intelligenceLevel = 0;
+        this.resistanceLevel = 0;
+        this.speedLevel = 0;
+        this.techniqueLevel = 0;
+        this.enduranceLevel = 0;
     }
 
     applyHeroStats(saveManager) {
         if (!this.isHero) return;
 
-        // Base levels are 0 to 3 for each stat
-        // Exploit -> Dégâts
-        const exploitLvl = saveManager.getStat('nicolas');
-        this.dmg += exploitLvl * 5;
+        // Charger les stats personnalisées depuis le saveManager
+        const stats = {
+            chance: saveManager.getStat('johann'),
+            exploit: saveManager.getStat('nicolas'),
+            agility: saveManager.getStat('pierre'),
+            intelligence: saveManager.getStat('thomas'),
+            resistance: saveManager.getStat('yannick'),
+            speed: saveManager.getStat('ali'),
+            technique: saveManager.getStat('guillaume'),
+            endurance: saveManager.getStat('jonathan'),
+            rage: 0 // Initialisation de la barre de rage
+        };
 
-        // Rapidité -> Vitesse d'attaque (lower is faster)
-        const speedLvl = saveManager.getStat('ali');
-        this.attackSpeed = Math.max(500, this.attackSpeed - (speedLvl * 400)); // 2000 -> 1600 -> 1200 -> 800
+        // Appliquer les stats dynamiquement
+        this.chanceLevel = stats.chance;
+        this.exploitLevel = stats.exploit;
+        this.agilityLevel = stats.agility;
+        this.intelligenceLevel = stats.intelligence;
+        this.resistanceLevel = stats.resistance;
+        this.speedLevel = stats.speed;
+        this.techniqueLevel = stats.technique;
+        this.enduranceLevel = stats.endurance;
 
-        // Chance -> Critique %
-        const critLvl = saveManager.getStat('johann');
-        this.critChance += critLvl * 0.15; // +15% per level
+        // Calcul de la chance de critique et d'esquive
+        const critMultiplier = 0.1 + (stats.chance * 0.2);
+        this.critChance = Math.min(1.0, critMultiplier);
 
-        // Agilité -> Esquive %
-        const dodgeLvl = saveManager.getStat('pierre');
-        this.dodgeChance += dodgeLvl * 0.10; // +10% per level
+        const dodgeMultiplier = 0.1 + (stats.agility * 0.15); // Chance d'esquive
+        this.dodgeChance = Math.min(1.0, dodgeMultiplier);
 
-        // Technique -> Précision %
-        const precLvl = saveManager.getStat('guillaume');
-        this.precision = Math.min(1.0, this.precision + (precLvl * 0.05)); // +5% per level
+        // Calculer le cooldown basé sur la vitesse et la technique
+        const speedCooldownFactor = 1 / (1 + stats.speed * 0.2); // Réduction du temps de cooldown
+        this.attackSpeed = Math.max(500, this.attackSpeed * speedCooldownFactor);
 
-        // Résistance -> Défense (réduction dégâts bruts)
-        const resLvl = saveManager.getStat('yannick');
-        this.defense += resLvl * 2; // -2 dmg per level
+        // Technique -> Précision et dégâts
+        const precisionBoost = Math.min(1.0, stats.technique * 0.2);
+        this.precision = Math.min(1.0, this.precision + precisionBoost);
 
-        // Intelligence -> Régénération (Soigne chaque fois qu'il attaque)
-        const intLvl = saveManager.getStat('thomas');
-        this.regen += intLvl * 5; // +5 HP healed per attack
+        // Résistance -> Réduction des dégâts
+        this.resistanceLevel += stats.resistance;
+
+        // Intelligence -> Régénération et mana
+        const manaFactor = 5 + (stats.intelligence * 2); // Augmentation du mana max
+        this.mana = Math.min(100, this.mana + manaFactor);
 
         // Endurance -> Points de Vie Max
-        const endLvl = saveManager.getStat('jonathan');
-        this.maxHp += endLvl * 50;
-        this.hp = this.maxHp;
+        this.maxHp += stats.endurance * 20;
+        this.hp = Math.min(this.maxHp, this.hp);
     }
 
     applyEnemyScaling(waveIndex) {
         if (this.isHero) return;
 
-        // Simple scaling: enemies get stronger every wave
-        this.maxHp = 50 + (waveIndex * 20);
-        this.hp = this.maxHp;
-        this.dmg = 5 + (waveIndex * 2);
-        this.attackSpeed = Math.max(1000, 2500 - (waveIndex * 100));
+        // Scaling basé sur les stats et le niveau de l'ennemi
+        const enemyLevel = waveIndex + 1; // Niveau de l'ennemi
+        this.maxHp += Math.min(50, enemyLevel * 20);
+        this.hp = Math.min(this.maxHp, this.hp);
+
+        // Augmentation des dégâts et réduction du cooldown
+        const speedMultiplier = 1 / (enemyLevel * 0.1); // Réduction du temps de cooldown
+        this.attackSpeed = Math.max(500, this.attackSpeed * speedMultiplier);
+
+        // Augmentation des stats de résistance et technique
+        this.resistanceLevel += Math.min(3, enemyLevel / 2);
+        this.techniqueLevel += Math.min(1, enemyLevel / 4);
     }
 
     applyBossScaling(bossIndex) {
         if (this.isHero) return;
 
-        // Bosses are significantly stronger
-        this.maxHp = 300 + (bossIndex * 100);
-        this.hp = this.maxHp;
-        this.dmg = 15 + (bossIndex * 5);
-        this.attackSpeed = Math.max(800, 2000 - (bossIndex * 100));
-        this.critChance = 0.1 + (bossIndex * 0.02);
-        this.defense = bossIndex;
+        // Scaling pour les boss basé sur leur niveau et leurs stats spéciales
+        const bossLevel = bossIndex + 1; // Niveau du boss
+
+        // Augmentation des PV et dégâts
+        this.maxHp += Math.min(300, bossLevel * 50);
+        this.hp = Math.min(this.maxHp, this.hp);
+
+        // Réduction du temps de cooldown et augmentation des stats
+        const speedMultiplier = 1 / (bossLevel * 0.2); // Réduction du temps de cooldown
+        this.attackSpeed = Math.max(500, this.attackSpeed * speedMultiplier);
+
+        // Augmentation de la chance de critique et résistance
+        this.critChance += Math.min(0.3, bossLevel * 0.1);
+        this.resistanceLevel += Math.min(4, bossLevel / 2);
+
+        // Stat technique pour les attaques spéciales
+        this.techniqueLevel = Math.max(1, bossLevel / 2);
     }
 
     takeDamage(rawDamage) {
-        // Check Dodge
+        // Check Dodge based on Agility stat
         if (Math.random() < this.dodgeChance) {
             return { type: 'DODGE', amount: 0 };
         }
 
-        // Apply Defense
-        let actualDamage = Math.max(1, rawDamage - this.defense);
+        // Calcul de la chance de critique basée sur Exploit et Chance stats
+        const critMultiplier = this.critChance + (this.exploitLevel * 0.2);
+        if (Math.random() < critMultiplier && rawDamage > 0) {
+            return { type: 'CRITICAL_HIT', amount: Math.max(1, rawDamage * 2) };
+        }
+
+        // Apply Defense based on Resistance stat
+        const defenseReduction = this.resistanceLevel * 0.5; // Réduction des dégâts par résistance
+        let actualDamage = Math.max(1, rawDamage - (defenseReduction + this.defense));
 
         this.hp = Math.max(0, this.hp - actualDamage);
         return { type: 'HIT', amount: actualDamage };
@@ -93,7 +143,10 @@ export class CombatEntity {
 
     heal(amount) {
         if (this.hp <= 0) return 0; // can't heal dead
-        const healed = Math.min(amount, this.maxHp - this.hp);
+
+        // Appliquer la régénération basée sur l'intelligence du personnage
+        const regenAmount = this.regen * amount;
+        const healed = Math.min(amount + regenAmount, this.maxHp - this.hp);
         this.hp += healed;
         return healed;
     }
